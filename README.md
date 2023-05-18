@@ -1,2 +1,3 @@
 # Repositorio_Beatriz_eGestor
-Arquivos de análises
+Alguns arquivos mais específicos com análise de dados. 
+*Scripts (.py), Documento Sales Ops, Links Dashboards no Looker Studio Overview

@@ -1,2 +1,2 @@
-# Reposit-rio_Beatriz_eGestor
+# Repositorio_Beatriz_eGestor
 Arquivos de análises

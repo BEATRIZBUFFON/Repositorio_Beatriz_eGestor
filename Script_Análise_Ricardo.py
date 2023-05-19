@@ -180,5 +180,3 @@ df5o['Dia '] = df5o['Dia '].dt.strftime('%d-%m-%Y')
 
 df_pronto3 = pd.concat([df1o, df2o, df3o, df4o, df5o], ignore_index=True)
 df_pronto3.to_excel('Ocorrencia.xlsx', index=False)
-
-

@@ -15,7 +15,6 @@ df4 = pd.read_excel(df4)
 df5 = "spotter_etapa/etapa_maio.xlsx"
 df5 = pd.read_excel(df5)
 
-
 def teste(df):
     df = df.drop([0, 1])
     df.columns = df.iloc[0]
@@ -24,16 +23,16 @@ def teste(df):
     df['TOTAL'] = df['TOTAL'].astype(int)
     df.rename(columns={df.columns[1]: "Pré-Vendedor"}, inplace=True)
     df['Pré-Vendedor'] = df['Pré-Vendedor'].astype(str) # converte para tipo string
-    df['setor'] = df['Pré-Vendedor'].apply(lambda x: 'Planilhas' if isinstance(x, str) and x.startswith('#$') else 
+    df['Setor'] = df['Pré-Vendedor'].apply(lambda x: 'Planilhas' if isinstance(x, str) and x.startswith('#$') else 
                                            'Trials' if isinstance(x, str) and x.startswith('$$') else
                                            'Outband' if isinstance(x, str) and x.startswith('@@') else
                                            'Revendas' if isinstance(x, str) and x.startswith('@') else
                                            'Nfemais' if isinstance(x, str) and x.startswith('%$') else
                                            'Outro')
     nomes_atualizar = ['SM Giovanni  Zanela']
-    df.loc[df['Pré-Vendedor'].isin(nomes_atualizar), 'setor'] = 'Vendas'
+    df.loc[df['Pré-Vendedor'].isin(nomes_atualizar), 'Setor'] = 'Vendas'
     nomes_atualizar2 = ['Alan Carvalho']
-    df.loc[df['Pré-Vendedor'].isin(nomes_atualizar2), 'setor'] = 'Revenda'
+    df.loc[df['Pré-Vendedor'].isin(nomes_atualizar2), 'Setor'] = 'Revenda'
     df['Pré-Vendedor'] = df['Pré-Vendedor'].str.replace('^\$\$|\%\$|\@\@|\#\$|\@We\@Yu\@Rev', '', regex=True)
     return df
 df1t = teste(df1)
@@ -64,7 +63,7 @@ df5t = df5t.dropna(subset=['Dia '])
 df5t['Dia '] = df5t['Dia '].dt.strftime('%d-%m-%Y')
 
 ###############JANEIRO#################
-agrup_janeiro = df1t.groupby(['Pré-Vendedor', 'Etapa ', 'setor'])['TOTAL'].sum()
+agrup_janeiro = df1t.groupby(['Pré-Vendedor', 'Etapa ', 'Setor'])['TOTAL'].sum()
 vendas_jan = agrup_janeiro.loc[:, 'Vendas']
 feedback_jan = agrup_janeiro.loc[:, 'Aplicações Feedback']
 agendamento_jan = agrup_janeiro.loc[:, 'Agendamentos']
@@ -84,15 +83,15 @@ relacao3_jan.rename(columns={relacao3_jan.columns[2]: "Total A/E"}, inplace=True
 
 merged_jan = pd.merge(relacao1_jan, relacao2_jan, on='Pré-Vendedor', how='outer')
 merged_jan = pd.merge(merged_jan, relacao3_jan, on='Pré-Vendedor', how='outer')
-merged_jan = merged_jan.drop(['setor_x','setor_y'], axis=1)
+merged_jan = merged_jan.drop(['Setor_x','Setor_y'], axis=1)
 
 
 ###############FEVEREIRO#################3
-agrup_fevereiro = df2t.groupby(['Pré-Vendedor', 'Etapa ', 'setor'])['TOTAL'].sum()
+agrup_fevereiro = df2t.groupby(['Pré-Vendedor', 'Etapa ', 'Setor'])['TOTAL'].sum()
 vendas_fev = agrup_fevereiro.loc[:, 'Vendas']
 feedback_fev = agrup_fevereiro.loc[:, 'Aplicações Feedback']
 agendamento_fev = agrup_fevereiro.loc[:, 'Agendamentos']
-entradas_fev = agrup_fevereiro.loc[:, 'Entradas']
+entradas_fev = agrup_fevereiro.loc[:, 'Entradas' ]
 
 relacao1_fev = (vendas_fev / feedback_fev * 100).round(2)
 relacao1_fev = relacao1_fev.to_frame().reset_index().rename(columns={'index': 'indice'})
@@ -108,10 +107,10 @@ relacao3_fev.rename(columns={relacao3_fev.columns[2]: "Total A/E"}, inplace=True
 
 merged_fev = pd.merge(relacao1_fev, relacao2_fev, on='Pré-Vendedor', how='outer')
 merged_fev = pd.merge(merged_fev, relacao3_fev, on='Pré-Vendedor', how='outer')
-merged_fev = merged_fev.drop(['setor_x','setor_y'], axis=1)
+merged_fev = merged_fev.drop(['Setor_x','Setor_y'], axis=1)
 
 ###############MARÇO#################
-agrup_marco = df3t.groupby(['Pré-Vendedor', 'Etapa ', 'setor'])['TOTAL'].sum()
+agrup_marco = df3t.groupby(['Pré-Vendedor', 'Etapa ', 'Setor'])['TOTAL'].sum()
 vendas_marco = agrup_marco.loc[:, 'Vendas']
 feedback_marco = agrup_marco.loc[:, 'Aplicações Feedback']
 agendamento_marco = agrup_marco.loc[:, 'Agendamentos']
@@ -131,11 +130,10 @@ relacao3_marco.rename(columns={relacao3_marco.columns[2]: "Total A/E"}, inplace=
 
 merged_marco = pd.merge(relacao1_marco, relacao2_marco, on='Pré-Vendedor', how='outer')
 merged_marco = pd.merge(merged_marco, relacao3_marco, on='Pré-Vendedor', how='outer')
-merged_marco = merged_marco.drop(['setor_x','setor_y'], axis=1)
-
+merged_marco = merged_marco.drop(['Setor_x','Setor_y'], axis=1)
 
 ###############ABRIL#################3
-agrup_abril = df4t.groupby(['Pré-Vendedor', 'Etapa ', 'setor'])['TOTAL'].sum()
+agrup_abril = df4t.groupby(['Pré-Vendedor', 'Etapa ', 'Setor'])['TOTAL'].sum()
 agrup_abril.head(10)
 vendas_abril = agrup_abril.loc[:, 'Vendas']
 feedback_abril = agrup_abril.loc[:, 'Aplicações Feedback']
@@ -156,11 +154,10 @@ relacao3_abril.rename(columns={relacao3_abril.columns[2]: "Total A/E"}, inplace=
 
 merged_abril = pd.merge(relacao1_abril, relacao2_abril, on='Pré-Vendedor', how='outer')
 merged_abril = pd.merge(merged_abril, relacao3_abril, on='Pré-Vendedor', how='outer')
-merged_abril = merged_abril.drop(['setor_x','setor_y'], axis=1)
-
+merged_abril = merged_abril.drop(['Setor_x','Setor_y'], axis=1)
 
 ##################MAIO############3
-agrup_maio = df5t.groupby(['Pré-Vendedor', 'Etapa ', 'setor'])['TOTAL'].sum()
+agrup_maio = df5t.groupby(['Pré-Vendedor', 'Etapa ', 'Setor'])['TOTAL'].sum()
 agrup_maio.head(10)
 vendas_maio = agrup_maio.loc[:, 'Vendas']
 feedback_maio = agrup_maio.loc[:, 'Aplicações Feedback']
@@ -181,7 +178,8 @@ relacao3_maio.rename(columns={relacao3_maio.columns[2]: "Total A/E"}, inplace=Tr
 
 merged_maio = pd.merge(relacao1_maio, relacao2_maio, on='Pré-Vendedor', how='outer')
 merged_maio = pd.merge(merged_maio, relacao3_maio, on='Pré-Vendedor', how='outer')
-merged_maio = merged_maio.drop(['setor_x','setor_y'], axis=1)
+merged_maio = merged_maio.drop(['Setor_x','Setor_y'], axis=1)
+
 merged_jan['Mês'] = 'Janeiro'
 merged_fev['Mês'] = 'Fevereiro'
 merged_marco['Mês'] = 'Março'
@@ -216,7 +214,6 @@ df['Pré-Vendedor'] = df['Pré-Vendedor'].replace('Almir Felipe', 'Almir Felipe'
 df['Pré-Vendedor'] = df['Pré-Vendedor'].replace('@Yu Wellington Reis', 'Wellington Reis')
 df['Pré-Vendedor'] = df['Pré-Vendedor'].replace(' Pedro Junger', 'Pedro Junger')
 
-            
 vendedores_desejados = ['Ana Paula Ramos', 'Henrique Lima', 'Jeniffer Soares', 'Pedro Machado',
                         'Jennifer Dallanora', 'Matheus Mesquita', 'Daniel Escobar', 'Eduarda Fragoso',
                         'Felipe Fiorini', 'Gabriel Martins', 'Andressa Lorenzoni', 'Renata Lopes',
@@ -226,4 +223,4 @@ vendedores_desejados = ['Ana Paula Ramos', 'Henrique Lima', 'Jeniffer Soares', '
                         'Andressa Lorenzoni', 'Marcelo Machado', 'Patrícia Melo',
                         'Clarine Mantai', 'Almir Felipe', 'Pedro Junger']
 df_selecionado = df.loc[df['Pré-Vendedor'].isin(vendedores_desejados)]
-df_selecionado.to_excel('TESTE2023.xlsx', index=False)
+df_selecionado.to_excel('Total_Análise_Ricardo2023.xlsx', index=False)

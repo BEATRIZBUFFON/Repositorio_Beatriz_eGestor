@@ -7,7 +7,7 @@ from dash import Dash, html, dcc
 from dash.dependencies import Input, Output, State
 import datetime
 
-df = pd.read_excel('marco_abril_maio0 (1).xlsx')
+df = pd.read_excel('marco_abril_maio0 (4).xlsx')
 df['inicio'] = pd.to_datetime(df['inicio'])
 df['fim'] = pd.to_datetime(df['fim'])
 df['data'] = df['inicio'].dt.date
@@ -15,36 +15,23 @@ df['inicio'] = df['inicio'].dt.time.apply(lambda x: x.strftime('%H:%M'))
 df['fim'] = df['fim'].dt.time.apply(lambda x: x.strftime('%H:%M'))
 def atribuir_setor(row):
     if row['nome'] in ['FERNANDOPENZ', 'RODRIGO', 'WELLINGTONREIS']:
-        return 'closer'
-    elif row['nome'] in ['LUIS', 'ALEXIABRANQUIER', 'LUIZOTAVIO', 'MIRELAMAGNAGO', 'SARAPALMEIRA', 'VICTOR']:
-        return 'financeiro/cs'
-    elif row['nome'] in ['ANANOAL', 'ALINEGARCIA', 'HAIGONSILVA', 'MURILO', 'SUELENROSSI']:
-        return 'farmer'
-    elif row['nome'] in ['ANARAMOS', 'ANDRESSALIMA', 'EDUARDADONADEL', 'HENRIQUEZEILMANN', 'PEDROMACHADO']:
-        return 'nfemais'
-    elif row['nome'] in ['ESTEFANICAMPOS', 'ALMIRERTEL', 'GIANFRANCODALCIN', 'PAULAFIORAVANTE']:
-        return 'planilhas'
-    elif row['nome'] in ['DIONATHANMARTINS', 'BEATRIZBUFFON', 'NICOLASSANTOS', 'ANDERSONLIMA', 'JEFFERSONOLIVEIRA', 'JULIANEROCHA', 'RAISSATOLFO', 'VICTORSOUZA']:
-        return 'pos-vendas'
-    elif row['nome'] in ['DANIELOLIVEIRA', 'JOAO', 'EDUARDAFRAGOSO', 'FELIPEFIORINI', 'FREDERICOVARGAS', 'GABRIELEMOTTA', 'GABRIELMARTINS', 'PATRICIALIMA', 'RENATA']:
-        return 'pre-vendas'
-    elif row['nome'] in ['ALANCARVALHO', 'ALAN', 'MATHEUSMESQUITA', 'JENNIFERDALLANORA', 'YURI', 'PRISCILATRINDADE']:
-        return 'revendas'
-    elif row['nome'] in ['ADILSON', 'THIAGOLOPES', 'KAYANE', 'FERNANDATOEBE', 'JULIANA', 'KELLI', 'LOUISE', 'LUCASGODOY', 'MARIAEDUARDAVARGAS', 'MILENAMACHADO', 'PAOLABORTOLOTO']:
-        return 'suporte'
-    elif row['nome'] in ['BEATRIZKOWAS', 'KAUHANCUNHA', 'AUGUSTOBARRETO', 'GABRIELPADOIN', 'JENIFFERSOARES', 'KALLEOETHUR', 'MARCELOMACHADO', 'PATRICIAMELO']:
-        return 'trials'
-    elif row['nome'] in ['ALISSON', 'RICARDO', 'MARCIA', 'DEIVISON', 'ANDRESSAELY', 'CAMILAW', 'GIAN', 'GIOVANNIZANELA', 'GUILHERMENETTO', 'LILIAN', 'NAIANEBOCK', 'VANESSA']:
-        return 'vendas'
-    elif row['nome'] in ['JOSEPH', 'EVERTON', 'PRISCILA']:
-        return 'adm'
-    elif row['nome'] in ['ESCOBAR', 'JOAOPALMEIRA', 'LUIZMELLO', 'PATRICIA', 'RAFAELA']:
-        return 'marketing'
-    elif row['nome'] in ['DOUGLASTEIXEIRA', 'ELIZANDROROOS', 'IGORAUGUSTO', 'KASPER', 'LUCCALARROSSA', 'VINICIUS', 'MAIER']:
-        return 'desenvolvimento'
+        return 'CLOSER REVENDAS'
+    elif row['nome'] in ['ANARAMOS', 'LARISSAMORAIS', 'PEDROMACHADO', 'GIANFRANCODALCIN', 'JENIFFERSOARES']:
+        return 'NFEMAIS+'
+    elif row['nome'] in ['ESTEFANICAMPOS', 'ALMIRERTEL', 'PAULAFIORAVANTE', 'PEDROFREITAS']:
+        return 'PLANILHAS'
+    elif row['nome'] in ['ANDRESSALIMA', 'EDUARDAFRAGOSO', 'DANIELOLIVEIRA', 'FELIPEFIORINI', 'GABRIELEMOTTA', 'GABRIELMARTINS', 'PATRICIALIMA', 'RENATA']:
+        return 'TRIALS'
+    elif row['nome'] in ['BEATRIZKOWAS', 'AUGUSTOBARRETO', 'KALLEOETHUR', 'MARCELOMACHADO']:
+        return 'OUTBAND'
+    elif row['nome'] in ['GUILHERMENETTO', 'LILIAN', 'VANESSA', 'NAIANEBOCK', 'ALISSON', 'CAMILAW', 'ANDRESSAELY' ]:
+        return 'CLOSERS'
     else:
         return None
 df['setor'] = df.apply(atribuir_setor, axis=1)
+
+setores_validos = ['CLOSER REVENDAS', 'NFEMAIS+', 'PLANILHAS', 'TRIALS', 'OUTBAND', 'CLOSERS']
+df = df[df['setor'].isin(setores_validos)]
 
 df_filtrado = df.loc[df['duracao'] >= 6]
 df_agrupado5 = df_filtrado.groupby(['nome', 'data'])['duracao'].sum() / 60
@@ -52,7 +39,7 @@ df_agrupado5['setor'] = df_agrupado5.apply(atribuir_setor, axis=1)
 df_agrupado5 = df_agrupado5.round().astype(int)
 df_agrupado55 = df_agrupado5.reset_index()
 df_agrupado55['setor'] = df_agrupado55.apply(atribuir_setor, axis=1)
-df_agrupado55.to_excel('Duracao1805.xlsx', index=False)
+df_agrupado55.to_excel('Duracao.xlsx', index=False)
 
 df_filtrado2 = df.loc[df['duracao'] >= 6]
 df_agrupado55 = df_filtrado2.groupby(['nome', 'data'])['duracao'].count()
@@ -60,7 +47,7 @@ df_agrupado55 = df_agrupado55.round().astype(int)
 df_agrupado55 = pd.DataFrame({'nome': df_agrupado55.index, 'quantidade': df_agrupado55.values})
 df_agrupado555 = df_agrupado55.reset_index()
 df_agrupado555['setor'] = df_agrupado555.apply(atribuir_setor, axis=1)
-df_agrupado555.to_excel('Quantidade1805.xlsx', index=False)
+df_agrupado555.to_excel('Quantidade.xlsx', index=False)
 
 df_jump = df.loc[df['duracao'] < 6]
 df_jump2 = df_jump.groupby(['nome', 'data'])['duracao'].sum() / 60
@@ -73,7 +60,7 @@ df_resul2 = pd.DataFrame({'nome': df_agrup2['nome'], 'data': df_agrup2['data'], 
 df_agrup2 = df_agrup2.reset_index()
 df_agrup2['setor'] = df_agrup2.apply(atribuir_setor, axis=1)
 teste = df_agrup2
-teste.to_excel('Jump1805.xlsx', index=False)
+teste.to_excel('Jump.xlsx', index=False)
 
 df["horario_arredondado"] = pd.to_datetime(df["inicio"]).dt.floor("H") + pd.to_timedelta(((pd.to_datetime(df["inicio"]).dt.minute // 10) * 10).astype(str) + "min")
 horarios = pd.date_range(start="09:00", end="18:00", freq="10min")
@@ -86,6 +73,7 @@ horarios = pd.date_range(start="09:00", end="18:00", freq="10min")
 df_horarios = pd.DataFrame({"horario_arredondado": horarios})
 df_merge = pd.merge(df_horarios, df, on="horario_arrendodado", how="left")
 df_merge["horario_arredondado"] = df_merge["horario_arredondado"].dt.strftime("%H:%M:%S")
+df_merge['duracao'] = (df_merge['duracao']/60).round(0)
 
 app = dash.Dash(__name__, external_stylesheets=[dbc.themes.CYBORG])   
 today = datetime.datetime.now().date()

@@ -50,7 +50,6 @@ df3t['Dia '] = df3t['Dia '].dt.strftime('%d-%m-%Y')
 
 df4t['Dia '] = pd.to_datetime(df4t['Dia '], format='%d').apply(lambda x: x.replace(year=2023, month=4))
 df4t = df4t.dropna(subset=['Dia ']) 
-
 df4t['Dia '] = df4t['Dia '].dt.strftime('%d-%m-%Y')
 
 df5t['Dia '] = pd.to_datetime(df5t['Dia '], format='%d').apply(lambda x: x.replace(year=2023, month=5))
@@ -100,7 +99,7 @@ df1p = teste2(df11)
 df2p = teste2(df22)
 df3p = teste2(df33)
 df4p = teste2(df44)
-df5p = teste3(df55)
+df5p = teste2(df55)
 
 df1p['Dia '] = pd.to_datetime(df1p['Dia '], format='%d').apply(lambda x: x.replace(year=2023, month=1))
 df1p = df1p.dropna(subset=['Dia ']) 
@@ -126,7 +125,7 @@ df_pronto2 = pd.concat([df1p, df2p, df3p, df4p, df5p], ignore_index=True)
 df_pronto2.to_excel('Temperatura.xlsx', index=False)
 
 # OCORRÊNCIA DE REUNIÃO
-
+ 
 df111 = "spotter_ocorrencia/ocorrencia_janeiro.xlsx"
 df111 = pd.read_excel(df111)
 
@@ -180,3 +179,5 @@ df5o['Dia '] = df5o['Dia '].dt.strftime('%d-%m-%Y')
 
 df_pronto3 = pd.concat([df1o, df2o, df3o, df4o, df5o], ignore_index=True)
 df_pronto3.to_excel('Ocorrencia.xlsx', index=False)
+
+

@@ -1,0 +1,59 @@
+import pandas as pd
+
+df = pd.read_excel('atrasos.xlsx')
+
+df = df.drop([0, 1, 2])
+df.columns = df.iloc[0]
+df = df[1:]
+df = df.reset_index(drop=True)
+
+df.rename(columns={df.columns[0]: "Tipo de Atividade"}, inplace=True)
+df.rename(columns={df.columns[1]: "Pré-Vendedor"}, inplace=True)
+df.rename(columns={df.columns[2]: "Dia"}, inplace=True)
+
+df['Pré-Vendedor'] = df['Pré-Vendedor'].str.replace('^\$\$|\%\$|\@\@|\#\$|\@We', '', regex=True)
+
+df['Pré-Vendedor'] = df['Pré-Vendedor'].replace({' Estéfani Campos': 'Estéfani Campos'})
+df['Pré-Vendedor'] = df['Pré-Vendedor'].replace({' Paula Fioravante': 'Paula Fioravante'})
+df['Pré-Vendedor'] = df['Pré-Vendedor'].replace({'Ca Daniel Escobar': 'Daniel Escobar'})
+df['Pré-Vendedor'] = df['Pré-Vendedor'].replace({'Ca Eduarda Fragoso': 'Eduarda Fragoso'})
+df['Pré-Vendedor'] = df['Pré-Vendedor'].replace({'Gu Gabriel Martins': 'Gabriel Martins'})
+df['Pré-Vendedor'] = df['Pré-Vendedor'].replace({'Li Andressa Lorenzoni': 'Andressa Lorenzoni'})
+df['Pré-Vendedor'] = df['Pré-Vendedor'].replace({'Va Patrícia Lima': 'Patrícia Lima'})
+df['Pré-Vendedor'] = df['Pré-Vendedor'].replace({' Gianfranco Dalcin': 'Gianfranco Dalcin'})
+df['Pré-Vendedor'] = df['Pré-Vendedor'].replace({' Pedro  Machado': 'Pedro Machado'})
+df['Pré-Vendedor'] = df['Pré-Vendedor'].replace({' Jennifer Dallanora': 'Jennifer Dallanora'})
+df['Pré-Vendedor'] = df['Pré-Vendedor'].replace({' Luiz Guilherme Mello': 'Luiz Guilherme Mello'})
+df['Pré-Vendedor'] = df['Pré-Vendedor'].replace({'Gu Felipe Fiorini': 'Felipe Fiorini'})
+df['Pré-Vendedor'] = df['Pré-Vendedor'].replace({'Va Gabriele Motta': 'Gabriele Motta'})
+df['Pré-Vendedor'] = df['Pré-Vendedor'].replace({' Ana Paula Ramos': 'Ana Paula Ramos'})
+df['Pré-Vendedor'] = df['Pré-Vendedor'].replace({' Matheus Mesquita Mesquita': 'Matheus Mesquita'})
+df['Pré-Vendedor'] = df['Pré-Vendedor'].replace({' Almir Felipe': 'Almir Felipe'})
+df['Pré-Vendedor'] = df['Pré-Vendedor'].replace({' Pedro Junger': 'Pedro Junger'})
+df['Pré-Vendedor'] = df['Pré-Vendedor'].replace({' Jeniffer Soares': 'Jeniffer Soares'})
+df['Pré-Vendedor'] = df['Pré-Vendedor'].replace({'SM Giovanni  Zanela': 'Giovanni Zanela'})
+df['Pré-Vendedor'] = df['Pré-Vendedor'].replace({'Li Renata Lopes': 'Renata Lopes'})
+df['Pré-Vendedor'] = df['Pré-Vendedor'].replace({' Henrique Lima': 'Henrique Lima'})
+
+df['Dia'] = df['Dia'].astype(str) + '/05/2023'
+
+def atribuir_setor(row):
+    if row['Pré-Vendedor'] in ['Jennifer Dallanora', 'Matheus Mesquita']:
+        return 'REVENDAS'
+    elif row['Pré-Vendedor'] in ['Ana Paula Ramos', 'Larissa Morais', 'Gianfranco Dalcin', 'Jeniffer Soares']:
+        return 'NFEMAIS'
+    elif row['Pré-Vendedor'] in ['Alan Carvalho']:
+        return 'CLOSER REVENDAS'
+    elif row['Pré-Vendedor'] in ['Estéfani Campos', 'Almir Felipe', 'uiz Guilherme Mello', 'Paula Fioravante', 'Pedro Junger']:
+        return 'PLANILHAS'
+    elif row['Pré-Vendedor'] in ['Andressa Lorenzoni', 'Eduarda Fragoso', 'Daniel Escobar', 'Felipe Fiorini', 'Gabriele Motta', 'Gabriel Martins', 'Patrícia Lima', 'Renata Lopes']:
+        return 'TRIALS'
+    elif row['Pré-Vendedor'] in ['Beatriz Kowas', 'Augusto Barreto', 'Kalleo Ethur', 'Marcelo Machado']:
+        return 'OUTBAND'
+    elif row['Pré-Vendedor'] in ['Lilian Palmeira', 'Vanessa Ortiz', 'Naiane Bock', 'Camila Wrasse', 'Andressa Ely' ]:
+        return 'CLOSERS'
+    else:
+        return None
+df['setor'] = df.apply(atribuir_setor, axis=1)
+
+df.to_excel('Teste_Atrasados3.xlsx', index=False)
